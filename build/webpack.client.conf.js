@@ -2,7 +2,7 @@
  * @Author: ly 
  * @Date: 2018-07-05 10:00:10 
  * @Last Modified by: ly
- * @Last Modified time: 2018-07-11 15:24:00
+ * @Last Modified time: 2018-07-11 17:26:26
  * @description: {'客户端webpack编译'} 
  */
 
@@ -11,10 +11,10 @@ const merge = require('webpack-merge');
 const baseConfig = require('./webpack.base.conf.js');
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 const webpack = require('webpack')
-
+const isProd = process.env.NODE_ENV === 'production';
 module.exports = merge(baseConfig, {
     mode: 'production',
-    devtool: 'inline-source-map',
+    devtool: isProd ? false : 'inline-source-map',
     output: {
         path: path.resolve(__dirname, '../dist'),
         filename: 'static/js/[name].js',
@@ -28,6 +28,12 @@ module.exports = merge(baseConfig, {
             'process.env.VUE_ENV': '"client"' // 增加process.env.VUE_ENV
         }),
         new webpack.optimize.SplitChunksPlugin({
+            chunks: "async",
+            minSize: 30000,
+            minChunks: 1,
+            maxAsyncRequests: 5,
+            maxInitialRequests: 3,
+            name: true,
             cacheGroups: {
                 default: {
                     minChunks: 2,
@@ -35,11 +41,13 @@ module.exports = merge(baseConfig, {
                     reuseExistingChunk: true,
                 },
                 //打包重复出现的代码
-                vendor: {
+                vendors: {
+                    test: /[\\/]node_modules[\\/]/,
+                    priority: -10,
                     chunks: 'initial',
-                    minChunks: 2,
-                    maxInitialRequests: 5, // The default limit is too small to showcase the effect
-                    minSize: 0, // This is example is too small to create commons chunks
+                    minChunks: 2, //(default: 1) 拆分前共享一个模块的最小块数
+                    maxInitialRequests: 5, // (default 3) 一个入口最大并行请求数
+                    minSize: 0, // (default: 30000) 块的最小大小
                     name: 'vendor'
                 },
                 //打包第三方类库

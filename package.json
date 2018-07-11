@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
-  "sideEffects": [
-    "*.css"
-  ],
   "scripts": {
     "build": "cross-env NODE_ENV=production node ./build/start.js & cross-env NODE_ENV=production node server",
     "dev": "cross-env NODE_ENV=dev node ./build/start.js",

@@ -4,7 +4,7 @@
     <div>
       <h2>{{mode}}</h2>
     </div>
-    继续测试呀
+        我需要加点东西，证明缓存有用
     <div><span>{{count}}</span></div>
     <div><button @click="count++">+1</button></div>
     <div>

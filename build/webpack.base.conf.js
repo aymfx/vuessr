@@ -2,13 +2,14 @@
  * @Author: ly 
  * @Date: 2018-07-05 09:44:58 
  * @Last Modified by: ly
- * @Last Modified time: 2018-07-11 15:53:08
+ * @Last Modified time: 2018-07-11 17:32:16
  * @description: {'webpack的通用的配置'} 
  */
 
 const path = require("path"); //路径api
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const webpack = require('webpack')
 
 function resolve(dir) {
     return path.join(__dirname, "..", dir);
@@ -95,7 +96,12 @@ module.exports = {
             }
         ]
     },
-    plugins: [new VueLoaderPlugin(), new ExtractTextPlugin({
-        filename: 'static/css/common.[chunkhash].css'
-    })]
+    plugins: [
+        new VueLoaderPlugin(),
+        new ExtractTextPlugin({
+            filename: 'static/css/common.[chunkhash].css',
+            allChunks: true,
+        }), //抽离css文件
+        new webpack.HashedModuleIdsPlugin(), //保留未修改代码的hashid模块，利于缓存
+    ]
 };
