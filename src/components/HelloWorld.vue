@@ -4,7 +4,7 @@
     <div>
       <h2>{{mode}}</h2>
     </div>
-    测试
+    继续测试呀
     <div><span>{{count}}</span></div>
     <div><button @click="count++">+1</button></div>
     <div>
@@ -53,7 +53,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style scoped lang='scss'>
 h1,
 h2 {
   font-weight: normal;

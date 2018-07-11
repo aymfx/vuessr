@@ -2,12 +2,13 @@
  * @Author: ly 
  * @Date: 2018-07-05 09:44:58 
  * @Last Modified by: ly
- * @Last Modified time: 2018-07-06 14:43:54
+ * @Last Modified time: 2018-07-11 15:53:08
  * @description: {'webpack的通用的配置'} 
  */
 
 const path = require("path"); //路径api
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 function resolve(dir) {
     return path.join(__dirname, "..", dir);
@@ -21,7 +22,7 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, "../dist"),
-        filename: "static/js/[name].js",
+        filename: "static/js/[hash:8].js",
         chunkFilename: 'static/js/[id].[chunkhash].js',
         publicPath: "/"
     },
@@ -31,6 +32,11 @@ module.exports = {
             vue$: "vue/dist/vue.esm.js",
             "@": resolve("src")
         }
+    },
+    optimization: {
+        splitChunks: {
+            chunks: 'all'
+        } //SplitChunks允许我们将公共依赖项提取到现有的块或全新的块中
     },
     module: {
         rules: [{
@@ -42,6 +48,19 @@ module.exports = {
                 use: ["vue-style-loader", "css-loader"]
             },
             {
+                test: /\.scss/,
+                use: ExtractTextPlugin.extract({
+                    use: [{
+                            loader: 'css-loader',
+                            options: {
+                                minimize: true
+                            }
+                        },
+                        'sass-loader'
+                    ],
+                    fallback: 'vue-style-loader'
+                })
+            }, {
                 test: /\.js$/,
                 loader: "babel-loader",
                 include: [
@@ -76,5 +95,7 @@ module.exports = {
             }
         ]
     },
-    plugins: [new VueLoaderPlugin()]
+    plugins: [new VueLoaderPlugin(), new ExtractTextPlugin({
+        filename: 'static/css/common.[chunkhash].css'
+    })]
 };

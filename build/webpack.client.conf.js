@@ -2,7 +2,7 @@
  * @Author: ly 
  * @Date: 2018-07-05 10:00:10 
  * @Last Modified by: ly
- * @Last Modified time: 2018-07-05 15:56:52
+ * @Last Modified time: 2018-07-11 15:24:00
  * @description: {'客户端webpack编译'} 
  */
 
@@ -11,6 +11,7 @@ const merge = require('webpack-merge');
 const baseConfig = require('./webpack.base.conf.js');
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 const webpack = require('webpack')
+
 module.exports = merge(baseConfig, {
     mode: 'production',
     devtool: 'inline-source-map',
@@ -20,6 +21,7 @@ module.exports = merge(baseConfig, {
         chunkFilename: 'static/js/[id].[chunkhash].js',
         publicPath: '/'
     },
+
     plugins: [
         new webpack.DefinePlugin({
             'process.env': JSON.stringify(process.env.NODE_ENV || 'development'),
