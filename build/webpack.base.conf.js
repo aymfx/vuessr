@@ -2,7 +2,7 @@
  * @Author: ly 
  * @Date: 2018-07-05 09:44:58 
  * @Last Modified by: ly
- * @Last Modified time: 2018-07-11 17:32:16
+ * @Last Modified time: 2018-07-12 14:14:57
  * @description: {'webpack的通用的配置'} 
  */
 
@@ -10,6 +10,7 @@ const path = require("path"); //路径api
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const webpack = require('webpack')
+const isProd = process.env.NODE_ENV === 'production';
 
 function resolve(dir) {
     return path.join(__dirname, "..", dir);
@@ -42,7 +43,10 @@ module.exports = {
     module: {
         rules: [{
                 test: /\.vue$/,
-                loader: "vue-loader"
+                loader: "vue-loader",
+                options: {
+                    extractCSS: isProd
+                }
             },
             {
                 test: /\.css$/,
@@ -50,7 +54,7 @@ module.exports = {
             },
             {
                 test: /\.scss/,
-                use: ExtractTextPlugin.extract({
+                use: isProd ? ExtractTextPlugin.extract({
                     use: [{
                             loader: 'css-loader',
                             options: {
@@ -60,7 +64,7 @@ module.exports = {
                         'sass-loader'
                     ],
                     fallback: 'vue-style-loader'
-                })
+                }): ['vue-style-loader', 'css-loader']
             }, {
                 test: /\.js$/,
                 loader: "babel-loader",
@@ -96,6 +100,10 @@ module.exports = {
             }
         ]
     },
+    performance: {
+        maxEntrypointSize: 300000,
+        hints: isProd ? 'warning' : false
+    }, //性能提示
     plugins: [
         new VueLoaderPlugin(),
         new ExtractTextPlugin({

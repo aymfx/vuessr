@@ -10,6 +10,7 @@
     <div>
       我叫{{item.name}},今年{{item.age}}
     </div>
+    <router-link to='/about'>about</router-link>
   </div>
 </template>
 

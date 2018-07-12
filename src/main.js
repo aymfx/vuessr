@@ -12,6 +12,9 @@ import {
 import {
   createStore
 } from './store'
+import titleMixin from '../util/title-mixin.js'
+// 混合头部标题
+Vue.mixin(titleMixin)
 
 Vue.config.productionTip = false
 
